@@ -41,25 +41,29 @@ if __name__ == "__main__":
         "item []:\n",
         " "*4 + "item [1]:\n",
         " "*8 + "class = \"IntervalTier\"\n",
-        " "*8 + "name = \"USER EMAIL\"\n",
+        " "*8 + "name = \"transcription\"\n",
         " "*8 + f"xmin = {to_seconds(srt[0].start)}\n",
         " "*8 + f"xmax = {to_seconds(srt[-1].end)}\n",
         " "*8 + f"intervals: size = {len(srt)}\n",
     ])
     for index, sub in enumerate(srt):
+
+        clntext = sub.text.replace('\"','\'') # IW: need to replace all "" (used as a text delimitor) by ''
+        clntext = clntext.replace('\n','') # IW: need to delete all \n
+
         if index < len(srt) - 1: # last sentence has different end time
             textgrid.writelines([
                 " "*8 + f"intervals [{index + 1}]:\n",
                 " "*12 + f"xmin = {to_seconds(sub.start)}\n",
                 " "*12 + f"xmax = {round(to_seconds(sub.end) - 0.01, 2)}\n", # subtracting 0.01 produces rounding error
-                " "*12 + f"text = {sub.text}\n",
+                " "*12 + f"text = \"{clntext}\"\n", # IW: added "" at the beginning and the end of each utterrance
             ])
         else:
             textgrid.writelines([
                 " "*8 + f"intervals [{index + 1}]:\n",
                 " "*12 + f"xmin = {to_seconds(sub.start)}\n",
                 " "*12 + f"xmax = {to_seconds(sub.end)}\n",
-                " "*12 + f"text = {sub.text}\n",
+                " "*12 + f"text = \"{clntext}\"\n", # IW: added "" at the beginning and the end of each utterrance
             ])
 
     textgrid.close()
